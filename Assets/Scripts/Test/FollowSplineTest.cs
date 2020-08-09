@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SplineMesh;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Spline))]
 public class FollowSplineTest : MonoBehaviour
@@ -10,16 +11,15 @@ public class FollowSplineTest : MonoBehaviour
 
     [SerializeField]
     float speed = 5;
-    [SerializeField]
-    GameObject follower;
-    [SerializeField]
-    moveStyle followType;
 
-    Controls controls;
+    public moveStyle followType;
+    public GameObject follower;
 
     #endregion
 
     #region variables
+
+    Controls controls;
 
     Spline spline;
     float locationOnSpline = 0f;
