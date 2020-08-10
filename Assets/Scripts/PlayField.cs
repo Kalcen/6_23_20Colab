@@ -42,7 +42,7 @@ public class PlayField : MonoBehaviour
 
     private void Update()
     {
-        FollowSpline();
+        //FollowSpline();
         if (mainCamera != null)
             DefineField();
     }
@@ -57,10 +57,10 @@ public class PlayField : MonoBehaviour
 
     #region methods
 
-    private void FollowSpline()
-    {
+    //private void FollowSpline()
+    //{
 
-    }
+    //}
 
     private void DefineField()
     {
