@@ -28,21 +28,21 @@ public class FollowParentSpline : MonoBehaviour
         splineFollower.spline = GetComponentInParent<Spline>();
     }
 
-    private void Update()
-    {
-        FollowOverTime();
-    }
+    //private void Update()
+    //{
+    //    FollowOverTime();
+    //}
 
     #endregion
 
     #region methods
 
-    void FollowOverTime()
-    {
-        locationOnSpline += Time.deltaTime * speed;
+    //void FollowOverTime()
+    //{
+    //    locationOnSpline += Time.deltaTime * speed;
 
-        splineFollower.MoveOnSpline(locationOnSpline);
-    }
+    //    splineFollower.MoveOnSpline(locationOnSpline);
+    //}
 
     #endregion
 }

@@ -2,28 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
-public class TargetMover : MonoBehaviour
+public class TargetDebug : MonoBehaviour
 {
     //movement
-    
+
     //debug values
     [SerializeField]
     bool debug;
+    [SerializeField]
+    LayerMask inViewDebugLayerMask;
     [HideInInspector]
     public Vector3 viewportToWorldPos;
     bool inView;
-    [SerializeField]
-    LayerMask inViewDebugLayerMask;
 
     private void LateUpdate()
     {
-        if (Application.isPlaying)
+        if (debug)
         {
-            if (debug)
-            {
-                DebugDrawTargetOnScreen();
-            }
+            DebugDrawTargetOnScreen();
         }
     }
 
@@ -48,7 +44,6 @@ public class TargetMover : MonoBehaviour
                 {
                     if (inView)
                     {
-                        print("remove");
                         viewportToWorldPos = transform.position;
                         Camera.main.transform.parent.GetComponentInChildren<DebugDrawTargetPositions>().RemoveTarget(this);
                         inView = false;

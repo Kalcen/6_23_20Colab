@@ -47,7 +47,7 @@ public class FollowSplineTest : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (follower != null)
         {
@@ -112,7 +112,7 @@ public class FollowSplineTest : MonoBehaviour
         follower.transform.localRotation = sample.Rotation;
     }
 
-    #endregion
+    #endregion 
 }
 
 public enum moveStyle

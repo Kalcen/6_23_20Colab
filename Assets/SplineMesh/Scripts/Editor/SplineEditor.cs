@@ -101,7 +101,7 @@ namespace SplineMesh {
             switch (selectionType) {
                 case SelectionType.Node:
                     // place a handle on the node and manage position change
-                    Vector3 newPosition = spline.transform.InverseTransformPoint(Handles.PositionHandle(spline.transform.TransformPoint(selection.Position), Quaternion.identity));
+                    Vector3 newPosition = spline.transform.InverseTransformPoint(Handles.PositionHandle(spline.transform.TransformPoint(selection.Position), spline.transform.localRotation));
                     if (newPosition != selection.Position) {
                         // position handle has been moved
                         if (mustCreateNewNode) {
@@ -116,11 +116,11 @@ namespace SplineMesh {
                     }
                     break;
                 case SelectionType.Direction:
-                    var result = Handles.PositionHandle(spline.transform.TransformPoint(selection.Direction), Quaternion.identity);
+                    var result = Handles.PositionHandle(spline.transform.TransformPoint(selection.Direction), spline.transform.localRotation);
                     selection.Direction = spline.transform.InverseTransformPoint(result);
                     break;
                 case SelectionType.InverseDirection:
-                    result = Handles.PositionHandle(2 * spline.transform.TransformPoint(selection.Position) - spline.transform.TransformPoint(selection.Direction), Quaternion.identity);
+                    result = Handles.PositionHandle(2 * spline.transform.TransformPoint(selection.Position) - spline.transform.TransformPoint(selection.Direction), spline.transform.localRotation);
                     selection.Direction = 2 * selection.Position - spline.transform.InverseTransformPoint(result);
                     break;
                 case SelectionType.Up:

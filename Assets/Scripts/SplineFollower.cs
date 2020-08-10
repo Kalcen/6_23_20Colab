@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using SplineMesh;
 
+[ExecuteInEditMode]
 public class SplineFollower : MonoBehaviour
 {
     #region properties
 
+    [SerializeField]
+    bool useParentSpline;
     public Spline spline;
+    [SerializeField]
+    float speed;
 
     #endregion
 
     #region variables
 
+    [SerializeField]
     float locationOnSpline = 0f;
 
     #endregion
@@ -21,22 +27,68 @@ public class SplineFollower : MonoBehaviour
 
     private void OnEnable()
     {
+        if (useParentSpline) 
+        {
+            if (GetComponentInParent<Spline>())
+            {
+                transform.localPosition = GetComponentInParent<Spline>().nodes[0].Position;
+            }
+            else 
+            {
+                print("Cannot locate parent spline.");
+            }
+        }
         if (spline != null)
         {
-            transform.localPosition = spline.nodes[0].Position;
+            transform.position = spline.nodes[0].Position;
         }
     }
 
     private void Update()
     {
-        PlaceOnSpline();
+        //correct serialized variables in editor while game is not in play mode
+        if (!Application.isPlaying) 
+        {
+            if (useParentSpline)
+            {
+                if (GetComponentInParent<Spline>())
+                {
+                    locationOnSpline = Mathf.Clamp(locationOnSpline, 0, GetComponentInParent<Spline>().Length);
+                }
+                else
+                {
+                    print("Cannot locate parent spline.");
+                }
+            }
+            if (spline != null)
+            {
+                locationOnSpline = Mathf.Clamp(locationOnSpline, 0, spline.Length);
+            }
+        }
+        //execute in play mode
+        if (useParentSpline)
+        {
+            if (GetComponentInParent<Spline>())
+            {
+                PlaceOnSpline(GetComponentInParent<Spline>());
+            }
+            else
+            {
+                print("Cannot locate parent spline.");
+            }
+        }
+        else
+        {
+            PlaceOnSpline(spline);
+        }
+        FollowOverTime();
     }
 
     #endregion
 
     #region methods
 
-    void PlaceOnSpline()
+    void PlaceOnSpline(Spline spline)
     {
         if (locationOnSpline < 0)
             locationOnSpline += spline.Length;
@@ -44,13 +96,21 @@ public class SplineFollower : MonoBehaviour
 
         CurveSample sample = spline.GetSampleAtDistance(locationOnSpline);
 
-        transform.localPosition = sample.location;
-        transform.localRotation = sample.Rotation;
+        if (useParentSpline)
+        {
+            transform.localPosition = sample.location;
+            transform.localRotation = sample.Rotation;
+        }
+        else 
+        {
+            transform.position = sample.location;
+            transform.rotation = sample.Rotation;
+        }
     }
 
-    public void MoveOnSpline(float pos)
+    void FollowOverTime()
     {
-        locationOnSpline = pos;
+        locationOnSpline += Time.deltaTime * speed;
     }
 
     #endregion

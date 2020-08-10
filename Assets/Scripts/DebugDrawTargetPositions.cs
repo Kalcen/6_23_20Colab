@@ -19,9 +19,9 @@ public class DebugDrawTargetPositions : MonoBehaviour
         }
     }
 
-    public void AddTarget(TargetMover target) 
+    public void AddTarget(TargetDebug target) 
     {
-        GameObject go = Instantiate(Resources.Load<GameObject>("Particles/UI Particles/TrackedTarget"), Vector3.zero, Quaternion.identity, xform);
+        GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Particles/UI Particles/TrackedTarget"), Vector3.zero, Quaternion.identity, xform);
         ParticleSystem ps = go.GetComponent<ParticleSystem>();
         ParticleSystem.MainModule main = ps.main;
         main.simulationSpace = ParticleSystemSimulationSpace.Custom;
@@ -33,7 +33,7 @@ public class DebugDrawTargetPositions : MonoBehaviour
 
         targets.Add(newTarget);
     }
-    public void RemoveTarget(TargetMover target)
+    public void RemoveTarget(TargetDebug target)
     {
         TargetTracker removeTT = new TargetTracker();
         GameObject removeGO = null;
@@ -56,7 +56,7 @@ public class DebugDrawTargetPositions : MonoBehaviour
 
     struct TargetTracker 
     {
-        public TargetMover target;
+        public TargetDebug target;
         public GameObject UIParticleSystem;
     }
 
