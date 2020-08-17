@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using SplineMesh;
 
+[RequireComponent(typeof(SplineFollower))]
 public class PlayField : MonoBehaviour
 {
     #region properties
@@ -22,7 +23,7 @@ public class PlayField : MonoBehaviour
     Vector3 bottomLeft, bottomRight, topLeft, topRight, reticle;
     float factor;
 
-    Spline spline;
+    SplineFollower splineFollower;
     float locationOnSpline = 0f;
 
     #endregion
@@ -38,11 +39,13 @@ public class PlayField : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+
+        splineFollower = GetComponent<SplineFollower>();
     }
 
     private void Update()
     {
-        //FollowSpline();
+        splineFollower.FollowOverTime(speed);
         if (mainCamera != null)
             DefineField();
     }
@@ -57,10 +60,12 @@ public class PlayField : MonoBehaviour
 
     #region methods
 
-    //private void FollowSpline()
-    //{
+    private void MoveAlongSpline()
+    {
+        locationOnSpline += Time.deltaTime * speed;
 
-    //}
+        //splineFollower.MoveOnSpline(locationOnSpline);
+    }
 
     private void DefineField()
     {
