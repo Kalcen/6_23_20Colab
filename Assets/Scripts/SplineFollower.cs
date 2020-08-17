@@ -9,19 +9,16 @@ public class SplineFollower : MonoBehaviour
     #region properties & variables
     
     //props
-    [SerializeField]
-    bool useParentSpline, autoFollow;
+    public bool useParentSpline, autoFollow;
 
-    [SerializeField]
-    Spline spline;
+    public Spline spline;
     Spline parentSpline;
 
     [SerializeField]
     float speed;
 
     //vars
-    [SerializeField]
-    float locationOnSpline = 0f;
+    public float locationOnSpline = 0f;
 
     #endregion
 
@@ -76,10 +73,5 @@ public class SplineFollower : MonoBehaviour
     public void FollowOverTime(float speed)
     {
         locationOnSpline += Time.deltaTime * speed;
-    }
-
-    public void MoveOnSpline(float pos)
-    {
-        locationOnSpline = pos;
     }
 }
