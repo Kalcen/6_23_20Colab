@@ -7,34 +7,24 @@ using SplineMesh;
 [RequireComponent(typeof(SplineFollower))]
 public class PlayField : MonoBehaviour
 {
-    #region properties
+    #region properties & variables
 
-    //[SerializeField]
+    //props
+    public float speed = 10;
+
+    [HideInInspector]
+    public Vector3 bottomLeft, bottomRight, topLeft, topRight, mouseReticle;
+    [HideInInspector]
+    public float trackWidth;
+
+    //vars
     Camera mainCamera;
-    [SerializeField]
-    float speed = 10;
-
-    #endregion
-
-    #region variables
-
-    Controls controls;
-
-    Vector3 bottomLeft, bottomRight, topLeft, topRight, reticle;
     float factor;
-
     SplineFollower splineFollower;
-    float locationOnSpline = 0f;
 
     #endregion
 
-    #region unity event functions
-
-    private void Awake() => controls = new Controls();
-
-    private void OnEnable() => controls.Player.Enable();
-
-    private void OnDisable() => controls.Player.Disable();
+    //--UNITY EVENT FUNCTIONS
 
     private void Start()
     {
@@ -46,6 +36,10 @@ public class PlayField : MonoBehaviour
     private void Update()
     {
         splineFollower.FollowOverTime(speed);
+    }
+
+    private void LateUpdate()
+    {
         if (mainCamera != null)
             DefineField();
     }
@@ -56,16 +50,7 @@ public class PlayField : MonoBehaviour
             DrawField();
     }
 
-    #endregion
-
-    #region methods
-
-    private void MoveAlongSpline()
-    {
-        locationOnSpline += Time.deltaTime * speed;
-
-        //splineFollower.MoveOnSpline(locationOnSpline);
-    }
+    //--METHODS
 
     private void DefineField()
     {
@@ -79,7 +64,7 @@ public class PlayField : MonoBehaviour
         Vector2 mouseToViewport = new Vector2(  Mouse.current.position.ReadValue().x / Screen.width,
                                                 Mouse.current.position.ReadValue().y / Screen.height);
 
-        reticle = mainCamera.ViewportToWorldPoint(new Vector3(mouseToViewport.x, mouseToViewport.y, factor));
+        mouseReticle = mainCamera.ViewportToWorldPoint(new Vector3(mouseToViewport.x, mouseToViewport.y, factor));
     }
 
     private void DrawField()
@@ -90,8 +75,6 @@ public class PlayField : MonoBehaviour
         Gizmos.DrawLine(bottomLeft, topLeft);
         Gizmos.DrawLine(bottomRight, topRight);
 
-        DebugGizmos.DrawX(reticle, .1f * factor, mainCamera.transform, Color.red, 0);
+        DebugGizmos.DrawX(mouseReticle, .1f * factor, mainCamera.transform, Color.red, 0);
     }
-
-    #endregion
 }

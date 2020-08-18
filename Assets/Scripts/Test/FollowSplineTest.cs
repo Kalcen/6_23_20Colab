@@ -12,7 +12,7 @@ public class FollowSplineTest : MonoBehaviour
     [SerializeField]
     float speed = 5;
 
-    public moveStyle followType;
+    public MoveStyle followType;
     public GameObject follower;
 
     #endregion
@@ -53,13 +53,13 @@ public class FollowSplineTest : MonoBehaviour
         {
             switch (followType)
             {
-                case moveStyle.FolowOverTime:
+                case MoveStyle.FolowOverTime:
                     PFConstSpeed();
                     break;
-                case moveStyle.ZeroToOne:
+                case MoveStyle.ZeroToOne:
                     PFZeroToOne();
                     break;
-                case moveStyle.VelocityControl:
+                case MoveStyle.VelocityControl:
                     PFVelocityControl();
                     break;
                 default:
@@ -115,7 +115,7 @@ public class FollowSplineTest : MonoBehaviour
     #endregion 
 }
 
-public enum moveStyle
+public enum MoveStyle
 {
     FolowOverTime,
     ZeroToOne,

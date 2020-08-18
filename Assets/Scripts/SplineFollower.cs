@@ -10,15 +10,13 @@ public class SplineFollower : MonoBehaviour
     
     //props
     public bool useParentSpline, autoFollow;
-
-    public Spline spline;
-    Spline parentSpline;
-
-    [SerializeField]
-    float speed;
+    public Spline targetSpline;
+    public float locationOnSpline = 0f;
 
     //vars
-    public float locationOnSpline = 0f;
+    Spline parentSpline;
+    [SerializeField]
+    float speed;
 
     #endregion
 
@@ -28,23 +26,29 @@ public class SplineFollower : MonoBehaviour
     {
         parentSpline = GetComponentInParent<Spline>();
 
-        if (spline != null)
-        {
-            transform.position = spline.nodes[0].Position;
-        }
+        if (targetSpline && !useParentSpline)
+            transform.position = targetSpline.nodes[0].Position;
+
+        else if (parentSpline && useParentSpline)
+            transform.localPosition = parentSpline.nodes[0].Position;
+
+        else
+            Debug.LogError(string.Format("Cannot locate{0}spline for {1}.", useParentSpline ? " parent " : " ", gameObject.name));
     }
 
     private void Update()
     {
-        if (spline != null)
+        Spline spline = useParentSpline ? parentSpline : targetSpline;
+
+        if (spline)
         {
-            PlaceOnSpline(useParentSpline ? parentSpline : spline);
+            PlaceOnSpline(spline);
             if (Application.isPlaying && autoFollow)
                 FollowOverTime(speed);
         }
         else
         {
-            Debug.LogError(string.Format("Cannot locate{0}spline.", useParentSpline ? " parent " : " "));
+            Debug.LogError(string.Format("Cannot locate{0}spline for {1}.", useParentSpline ? " parent " : " ", gameObject.name));
         }
     }
 
