@@ -7,7 +7,7 @@ public class DebugDrawTargetPositions : MonoBehaviour
     static Transform xform;
     static List<TargetTracker> targets = new List<TargetTracker>();
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         xform = transform;
         foreach (TargetTracker tt in targets) 

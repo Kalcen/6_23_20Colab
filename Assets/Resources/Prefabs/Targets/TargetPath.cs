@@ -11,7 +11,7 @@ public class TargetPath : MonoBehaviour
     [SerializeField]
     bool loopTarget;
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (useScreenSpace) 
         {

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useParentSpline: 1
+  autoFollow: 0
   spline: {fileID: 0}
   speed: 5
   locationOnSpline: 0.5
@@ -26,7 +27,7 @@ PrefabInstance:
     - target: {fileID: 5915090813989001936, guid: b5548461fc858b94f855de064e6ba7e6,
         type: 3}
       propertyPath: m_Name
-      value: SplineTarget
+      value: SplineTarget Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5915090813989001938, guid: b5548461fc858b94f855de064e6ba7e6,
         type: 3}

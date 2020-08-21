@@ -15,7 +15,7 @@ public class TargetDebug : MonoBehaviour
     public Vector3 viewportToWorldPos;
     bool inView;
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (debug)
         {
