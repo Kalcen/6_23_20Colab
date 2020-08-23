@@ -49,6 +49,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""8b8c7d1c-05d2-4288-bf6a-15a2d49f003f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -150,6 +158,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""57d3547a-61ed-4a09-85c2-dca1ebe1e0fc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -168,6 +187,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Forward = m_Player.FindAction("Forward", throwIfNotFound: true);
         m_Player_Reverse = m_Player.FindAction("Reverse", throwIfNotFound: true);
         m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
+        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -221,6 +241,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Forward;
     private readonly InputAction m_Player_Reverse;
     private readonly InputAction m_Player_Mouse;
+    private readonly InputAction m_Player_Fire;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -229,6 +250,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Forward => m_Wrapper.m_Player_Forward;
         public InputAction @Reverse => m_Wrapper.m_Player_Reverse;
         public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
+        public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -250,6 +272,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Mouse.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
                 @Mouse.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
                 @Mouse.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
+                @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -266,6 +291,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Mouse.started += instance.OnMouse;
                 @Mouse.performed += instance.OnMouse;
                 @Mouse.canceled += instance.OnMouse;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
             }
         }
     }
@@ -285,5 +313,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnForward(InputAction.CallbackContext context);
         void OnReverse(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }

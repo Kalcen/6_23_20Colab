@@ -7,16 +7,28 @@ using SplineMesh;
 public class SplineFollower : MonoBehaviour
 {
     #region properties & variables
-    
-    //props
-    public bool useParentSpline, autoFollow;
-    public Spline targetSpline;
-    public Vector3 locationOnSpline = Vector3.zero;
 
-    //vars
-    Spline parentSpline;
+    public Spline Spline
+    {
+        get { return spline; }
+    }
+    public CurveSample Sample
+    {
+        get { return sample; }
+    }
+
+    [SerializeField]
+    bool useParentSpline, autoFollow;
+    [SerializeField]
+    Spline targetSpline;
+    [SerializeField]
+    Vector3 locationOnSpline = Vector3.zero;
     [SerializeField]
     float speed;
+
+    Spline parentSpline;
+    Spline spline;
+    CurveSample sample;
 
     #endregion
 
