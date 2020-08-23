@@ -57,7 +57,6 @@ namespace SplineMesh {
 #if UNITY_2017_3_OR_NEWER
             mesh.indexFormat = source.indexFormat;
 #endif
-
             mesh.triangles = new int[0];
             mesh.vertices = vertices == null ? source.vertices : vertices.ToArray();
             mesh.normals = normals == null ? source.normals : normals.ToArray();

@@ -11,7 +11,7 @@ public class SplineFollower : MonoBehaviour
     //props
     public bool useParentSpline, autoFollow;
     public Spline targetSpline;
-    public float locationOnSpline = 0f;
+    public Vector3 locationOnSpline = Vector3.zero;
 
     //vars
     Spline parentSpline;
@@ -56,26 +56,27 @@ public class SplineFollower : MonoBehaviour
 
     public void PlaceOnSpline(Spline spline)
     {
-        if (locationOnSpline < 0)
-            locationOnSpline += spline.Length;
-        locationOnSpline %= spline.Length;
+        if (locationOnSpline.x < 0)
+            locationOnSpline.x += spline.Length;
+        locationOnSpline.x %= spline.Length;
 
-        CurveSample sample = spline.GetSampleAtDistance(locationOnSpline);
+        CurveSample sample = spline.GetSampleAtDistance(locationOnSpline.x);
+        Vector3 location = sample.location + (transform.right * locationOnSpline.z) + (transform.up * locationOnSpline.y);
 
         if (useParentSpline)
         {
-            transform.localPosition = sample.location;
+            transform.localPosition = location;
             transform.localRotation = sample.Rotation;
         }
         else 
         {
-            transform.position = sample.location + spline.transform.position;
+            transform.position = location + spline.transform.position;
             transform.rotation = sample.Rotation;
         }
     }
 
     public void FollowOverTime(float speed)
     {
-        locationOnSpline += Time.deltaTime * speed;
+        locationOnSpline.x += Time.deltaTime * speed;
     }
 }

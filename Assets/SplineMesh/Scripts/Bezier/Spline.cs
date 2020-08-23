@@ -302,6 +302,7 @@ namespace SplineMesh {
             return closest;
         }
     }
+
     public enum ListChangeType {
         Add,
         Insert,

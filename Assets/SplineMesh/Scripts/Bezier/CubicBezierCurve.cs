@@ -144,7 +144,8 @@ namespace SplineMesh {
                 GetScale(time),
                 GetRoll(time),
                 distance,
-                time);
+                time,
+                this);
         }
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace SplineMesh {
             if (!found) throw new Exception("Can't find curve samples.");
             float t = next == previous ? 0 : (time - previous.timeInCurve) / (next.timeInCurve - previous.timeInCurve);
 
-            return CurveSample.Lerp(previous, next, t);
+            return CurveSample.Lerp(previous, next, t, this);
         }
 
         /// <summary>
@@ -194,7 +195,7 @@ namespace SplineMesh {
             if (!found) throw new Exception("Can't find curve samples.");
             float t = next == previous ? 0 : (d - previous.distanceInCurve) / (next.distanceInCurve - previous.distanceInCurve);
 
-            return CurveSample.Lerp(previous, next, t);
+            return CurveSample.Lerp(previous, next, t, this);
         }
 
         private static void AssertTimeInBounds(float time) {
@@ -235,7 +236,7 @@ namespace SplineMesh {
             var onCurve = Vector3.Project(pointToProject - previous.location, next.location - previous.location) + previous.location;
             var rate = (onCurve - previous.location).sqrMagnitude / (next.location - previous.location).sqrMagnitude;
             rate = Mathf.Clamp(rate, 0, 1);
-            var result = CurveSample.Lerp(previous, next, rate);
+            var result = CurveSample.Lerp(previous, next, rate, this);
             return result;
         }
     }

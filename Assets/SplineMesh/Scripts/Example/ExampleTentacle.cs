@@ -16,7 +16,6 @@ namespace SplineMesh {
     /// You can easily imagine a list of scales to apply to each node independantly to create your own variation.
     /// </summary>
     [DisallowMultipleComponent]
-    [ExecuteInEditMode]
     public class ExampleTentacle : MonoBehaviour {
         private Spline spline = null;
 

@@ -21,6 +21,8 @@ namespace SplineMesh {
 
         [Tooltip("Mesh to bend along the spline.")]
         public Mesh mesh;
+        [Tooltip("Mesh to bend along the spline.")]
+        public Mesh collider;
         [Tooltip("Material to apply on the bent mesh.")]
         public Material material;
         [Tooltip("Physic material to apply on the bent mesh.")]
@@ -31,9 +33,11 @@ namespace SplineMesh {
         public Vector3 rotation;
         [Tooltip("Scale to apply on the mesh before bending it.")]
         public Vector3 scale = Vector3.one;
+        public float customIntervalStart, customIntervalEnd;
+        public bool obstructionMasking;
 
-        [Tooltip("If true, a mesh collider will be generated.")]
-        public bool generateCollider = true;
+        //[Tooltip("If true, a mesh collider will be generated.")]
+        //public bool generateCollider = true;
 
         [Tooltip("If true, the mesh will be bent on play mode. If false, the bent mesh will be kept from the editor mode, allowing lighting baking.")]
         public bool updateInPlayMode;
@@ -68,6 +72,8 @@ namespace SplineMesh {
 
             if (toUpdate) {
                 toUpdate = false;
+                customIntervalStart = Mathf.Clamp(customIntervalStart, 0, customIntervalEnd);
+                customIntervalEnd = Mathf.Clamp(customIntervalEnd, customIntervalStart, spline.Length);
                 CreateMeshes();
             }
         }
@@ -75,50 +81,116 @@ namespace SplineMesh {
         public void CreateMeshes() {
             var used = new List<GameObject>();
 
-            if (curveSpace) {
+            if (curveSpace) 
+            {
                 int i = 0;
-                foreach (var curve in spline.curves) {
-                    var go = FindOrCreate("segment " + i++ + " mesh");
-                    go.GetComponent<MeshBender>().SetInterval(curve);
-                    go.GetComponent<MeshCollider>().enabled = generateCollider;
-                    used.Add(go);
+                foreach (var curve in spline.curves) 
+                {
+                    if (collider) 
+                    {
+                        i++;
+                        var coll = FindOrCreateCollider("segment " + i + " collider");
+                        coll.GetComponent<MeshBender>().SetInterval(curve);
+                        used.Add(coll);
+
+                        var render = FindOrCreateRender("segment " + i + " collider", "segment " + i + " render");
+                        render.GetComponent<MeshBender>().SetInterval(curve);
+                        render.transform.parent = coll.transform;
+                        used.Add(render);
+                    }
+                    else
+                    {
+                        var render = FindOrCreateRender("none", "segment " + i + " render");
+                        render.GetComponent<MeshBender>().SetInterval(curve);
+                        used.Add(render);
+                    }
                 }
-            } else {
-                var go = FindOrCreate("segment 1 mesh");
-                go.GetComponent<MeshBender>().SetInterval(spline, 0);
-                go.GetComponent<MeshCollider>().enabled = generateCollider;
-                used.Add(go);
+            } 
+            else 
+            {
+                if (collider)
+                {
+                    var coll = FindOrCreateCollider("segment 1 collider");
+                    coll.GetComponent<MeshBender>().SetInterval(spline, 0);
+                    used.Add(coll);
+
+                    var render = FindOrCreateRender("segment 1 collider", "segment 1 render");
+                    render.GetComponent<MeshBender>().SetInterval(spline, 0);
+                    render.transform.parent = coll.transform;
+                    used.Add(render);
+                }
+                else 
+                {
+                    var render = FindOrCreateRender("none", "segment 1 render");
+                    render.GetComponent<MeshBender>().SetInterval(spline, 0);
+                    used.Add(render);
+                }
             }
 
             // we destroy the unused objects. This is classic pooling to recycle game objects.
-            foreach (var go in generated.transform
-                .Cast<Transform>()
-                .Select(child => child.gameObject).Except(used)) {
+            foreach (var go in generated.transform.Cast<Transform>().Select(child => child.gameObject).Except(used)) 
+            {
                 UOUtility.Destroy(go);
             }
         }
 
-        private GameObject FindOrCreate(string name) {
+        private GameObject FindOrCreateCollider(string name) {
             var childTransform = generated.transform.Find(name);
+            GameObject res;
+            if (childTransform == null)
+            {
+                res = UOUtility.Create(name,
+                    generated,
+                    typeof(MeshFilter),
+                    typeof(MeshBender),
+                    typeof(MeshCollider));
+                res.isStatic = true;
+            }
+            else
+            {
+                res = childTransform.gameObject;
+            }
+            res.GetComponent<MeshCollider>().material = physicMaterial;
+            MeshBender mb = res.GetComponent<MeshBender>();
+            mb.Source = SourceMesh.Build(collider)
+                .Translate(translation)
+                .Rotate(Quaternion.Euler(rotation))
+                .Scale(scale);
+            if (mode == MeshBender.FillingMode.CustomIntervals)
+            {
+                mb.SetCustomInterval(customIntervalStart, customIntervalEnd);
+            }
+            mb.Mode = mode;
+            return res;
+        }
+        private GameObject FindOrCreateRender(string parentName, string name) {
+            var childTransform = generated.transform.Find(name);
+            if (collider) 
+            {
+                var parentTransform = generated.transform.Find(parentName);
+                childTransform = parentTransform.Find(name);
+            }
             GameObject res;
             if (childTransform == null) {
                 res = UOUtility.Create(name,
                     generated,
                     typeof(MeshFilter),
                     typeof(MeshRenderer),
-                    typeof(MeshBender),
-                    typeof(MeshCollider));
+                    typeof(MeshBender));
                 res.isStatic = true;
             } else {
                 res = childTransform.gameObject;
             }
             res.GetComponent<MeshRenderer>().material = material;
-            res.GetComponent<MeshCollider>().material = physicMaterial;
             MeshBender mb = res.GetComponent<MeshBender>();
             mb.Source = SourceMesh.Build(mesh)
                 .Translate(translation)
                 .Rotate(Quaternion.Euler(rotation))
                 .Scale(scale);
+            if (mode == MeshBender.FillingMode.CustomIntervals)
+            {
+                mb.SetCustomInterval(customIntervalStart, customIntervalEnd);
+            }
             mb.Mode = mode;
             return res;
         }

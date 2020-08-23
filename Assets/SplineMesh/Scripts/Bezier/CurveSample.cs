@@ -33,7 +33,8 @@ namespace SplineMesh {
             }
         }
 
-        public CurveSample(Vector3 location, Vector3 tangent, Vector3 up, Vector2 scale, float roll, float distanceInCurve, float timeInCurve) {
+        public readonly CubicBezierCurve curve;
+        public CurveSample(Vector3 location, Vector3 tangent, Vector3 up, Vector2 scale, float roll, float distanceInCurve, float timeInCurve, CubicBezierCurve curve) {
             this.location = location;
             this.tangent = tangent;
             this.up = up;
@@ -41,6 +42,7 @@ namespace SplineMesh {
             this.scale = scale;
             this.distanceInCurve = distanceInCurve;
             this.timeInCurve = timeInCurve;
+            this.curve = curve;
             rotation = Quaternion.identity;
         }
 
@@ -78,7 +80,8 @@ namespace SplineMesh {
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static CurveSample Lerp(CurveSample a, CurveSample b, float t) {
+        public static CurveSample Lerp(CurveSample a, CurveSample b, float t, CubicBezierCurve c)
+        {
             return new CurveSample(
                 Vector3.Lerp(a.location, b.location, t),
                 Vector3.Lerp(a.tangent, b.tangent, t).normalized,
@@ -86,7 +89,8 @@ namespace SplineMesh {
                 Vector2.Lerp(a.scale, b.scale, t),
                 Mathf.Lerp(a.roll, b.roll, t),
                 Mathf.Lerp(a.distanceInCurve, b.distanceInCurve, t),
-                Mathf.Lerp(a.timeInCurve, b.timeInCurve, t));
+                Mathf.Lerp(a.timeInCurve, b.timeInCurve, t),
+                c);
         }
 
         public MeshVertex GetBent(MeshVertex vert) {

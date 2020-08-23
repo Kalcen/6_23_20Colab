@@ -16,7 +16,7 @@ namespace SplineMesh {
     public class ExampleFollowSpline : MonoBehaviour {
         private GameObject generated;
         private Spline spline;
-        private float rate = 0;
+        public float rate = 0;
 
         public GameObject Follower;
         public float DurationInSecond;
