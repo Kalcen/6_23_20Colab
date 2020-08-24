@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     float minWallDotProduct;
 
 
-    Vector2 movementInput;
+    public Vector2 movementInput;
 
     Vector3 desiredVelocity;
     Vector3 velocity;
@@ -86,9 +86,12 @@ public class PlayerController : MonoBehaviour
             velocity.y += Physics.gravity.magnitude * Time.deltaTime;
             //apply movement input
             velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-            if (wallContactCount > 0 && Vector3.Dot(transform.right * desiredVelocity.x, wallNormal) < 0)
+            if (wallContactCount > 0)
             {
-                velocity.x = 0;
+                if (Vector3.Dot(transform.right * velocity.x, new Vector3(wallNormal.x, 0, wallNormal.z).normalized) < 0)
+                {
+                    velocity.x = 0;
+                }
             }
             pointOnSpline.z += velocity.x * Time.deltaTime;
             //Set spline location
@@ -174,6 +177,7 @@ public class PlayerController : MonoBehaviour
             }
             else 
             {
+                print(normal.y);
                 contactCount++;
                 contactNormal += normal;
             }
